@@ -74,4 +74,15 @@ int get_key()
 int main(void)
 {
 	ini_lcd();
+	
+	char textRow0[17];
+	char textRow1[17];
+	
+	clr_lcd();
+	sprintf( textRow0, "Welcome to" );
+	sprintf( textRow1, "Jimond Says" );
+	puts_lcd2( textRow0 );
+	pos_lcd( 1, 0 );
+	puts_lcd2( textRow1 );
+	
 }
