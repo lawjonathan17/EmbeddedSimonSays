@@ -1,12 +1,10 @@
 #include "avr.h"
 #include "lcd.h"
 
-
 struct note{
 	unsigned char freq;
 	unsigned char duration;
 };
-
 
 void ini_avr(void)
 {
@@ -70,6 +68,29 @@ int get_key()
 	return 0;
 }
 
+void play_note( unsigned char freq, unsigned char duration, unsigned char ratio )
+{
+	float period = ( 1.0 / ( FRQ[freq] ) );
+	float th = ( period / ratio )* 10000.0 ;
+	float tl;
+	if ( ratio == 3 )
+	{
+		tl = ( (ratio-1) / ratio ) * period * 10000.0;
+	}
+	else if ( ratio == 2 )
+	{
+		tl = ( period / ratio )* 10000.0 ;
+	}
+	
+	unsigned short limit = ( 1.0 / duration ) / period;
+	for( unsigned short i = 0; i < limit; i++ )
+	{
+		SET_BIT( PORTB, 3 );
+		wait_avr( th );
+		CLR_BIT( PORTB, 3 );
+		wait_avr( tl );
+	}
+}
 
 int main(void)
 {
