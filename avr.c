@@ -180,9 +180,9 @@ int main(void)
  	int level = 3;
 	unsigned char key;
 	unsigned short index = 0;
-	int* userInput;
-	int* combo;
-	build_combination( &combo[0], level );
+	int userInput[level];
+	int combo[level];
+	build_combination( combo, level );
 	unsigned char readInput = 1;
 	
 	for( int i = 0; i < level; i++ )
@@ -196,7 +196,6 @@ int main(void)
 	
 	sprintf( textRow0, "c = %d", combo[0] );
 	puts_lcd2(textRow0);
-	/*
 	while( 1 )
 	{
 		if( readInput )
@@ -216,7 +215,6 @@ int main(void)
 					pos_lcd(1, 0);
 					puts_lcd2(textRow1);
 					
-					/*
 					if( (key-1) == combo[index] )
 					{
 						index++;
@@ -231,7 +229,7 @@ int main(void)
 				}
 			}
 		}
-*/
+
 		
 		
 		
@@ -287,6 +285,5 @@ int main(void)
 		// Build an array of user input
 		// Check the user input array
 		// Success / Failure results
-
-	
+	}
 }
