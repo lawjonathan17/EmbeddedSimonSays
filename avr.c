@@ -1,6 +1,5 @@
 #include "avr.h"
 #include "lcd.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -104,7 +103,7 @@ void play_note( unsigned char freq, unsigned char duration )
 
 void build_combination( int* combo, unsigned short level )
 {
-	char textRow0[17];
+//	char textRow0[17];
 	for( unsigned short i = 0; i < level; i++ )
 	{
 		unsigned short keysIndex = ( rand() % 16 );
@@ -113,6 +112,28 @@ void build_combination( int* combo, unsigned short level )
 //		puts_lcd2( textRow0 );
 //		wait_avr( 10000 );
 //		clr_lcd();
+	}
+}
+
+void buildUserInput( int* userInput, int level )
+{
+	unsigned short index = 0;
+	unsigned short key;
+	while(1)
+	{
+		if( index == level )
+		{
+			break;
+		}
+		for( unsigned char i = 0; i < 4; i++ )
+		{
+			wait_avr(250);
+			key = get_key();
+			if( key )
+			{
+				userInput[index++] = key;
+			}
+		}
 	}
 }
 
@@ -168,17 +189,21 @@ int main(void)
 			puts_lcd2( textRow0 );
 			wait_avr( 10000 );
 		}
-		int inputIndex = 0;
-		for( unsigned char i = 0; i < 4; i++ )
-		{
-			wait_avr(300);
-			key = get_key();
-			if( key )
-			{
-				userInput[inputIndex++] = key;
-			}
-		}
 		
+		clr_lcd();
+		buildUserInput( userInput, level );
+		sprintf( textRow0, "test" );
+		puts_lcd2( textRow0 );
+		while(1);
+		/*
+		for( int i = 0; i < level; i++ )
+		{
+			clr_lcd();
+			sprintf( textRow0, "u: %d , i: %d",  userInput[i], i);
+			puts_lcd2( textRow0 );
+			wait_avr( 10000 );
+		}
+		*/
 		// b_c() return the array
 		// Build an array of user input
 		// Check the user input array

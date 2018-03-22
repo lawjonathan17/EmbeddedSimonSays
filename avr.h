@@ -22,5 +22,7 @@ int get_key();
 int is_pressed();
 void play_note( unsigned char freq, unsigned char duration);
 void build_combination( int* combo, unsigned short level );
+void buildUserInput( int* userInput, int level );
+
 
 #endif
