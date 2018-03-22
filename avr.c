@@ -16,7 +16,7 @@ struct note{
 const float FRQ[16] = { 220.000, 233.082, 246.942, 261.626, 277.183, 293.665, 311.127, 329.628,
 						349.228, 369.994, 391.995, 415.305, 440.000, 466.164, 493.883, 523.251 };
 
-const char* keys[16] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "Star", "Pound" };
+const char* keys[16] = { "1", "2", "3", "A", "4", "5", "6", "B", "7", "8", "9","C", "Star", "0", "Pound", "D" };
 
 void ini_avr(void)
 {
@@ -177,25 +177,24 @@ int main(void)
 // 	sprintf( textRow0, "%d", a );
 // 	puts_lcd2( textRow0 );
 // 	a = 0;
+
+
  	int level = 3;
 	unsigned char key;
 	unsigned short index = 0;
-	int userInput[level];
-	int combo[level];
+	int combo[9999];
 	build_combination( combo, level );
 	unsigned char readInput = 1;
 	
 	for( int i = 0; i < level; i++ )
 	{
 		clr_lcd();
-		sprintf( textRow0, "c: %d , i: %d", combo[i], i);
+		sprintf( textRow0, "c: %s , i: %d", keys[combo[i]], i);
 		puts_lcd2( textRow0 );
 		wait_avr( 10000 );
 	}
 	clr_lcd();
 	
-	sprintf( textRow0, "c = %d", combo[0] );
-	puts_lcd2(textRow0);
 	while( 1 )
 	{
 		if( readInput )
@@ -210,7 +209,7 @@ int main(void)
 					clr_lcd();
 					// sprintf( textRow0, "k = %d, c: %d", key-1, *(combo + index) );
 					sprintf( textRow0, "k = %d", key-1);
-					sprintf( textRow1, "c = %d", combo[index] );
+					sprintf( textRow1, "c = %s", keys[combo[index]] );
 					puts_lcd2( textRow0 );
 					pos_lcd(1, 0);
 					puts_lcd2(textRow1);
@@ -221,69 +220,36 @@ int main(void)
 					}
 					else
 					{
-						//clr_lcd();
-						//sprintf(textRow0, "wrong");
-						//puts_lcd2( textRow0 );
+						clr_lcd();
+						sprintf(textRow0, "wrong");
+						puts_lcd2( textRow0 );
+						readInput = 0;
 					}
-					
 				}
+			}
+			
+			if( index == level )
+			{
+				clr_lcd();
+				sprintf(textRow0, "Congrats!" );
+				sprintf(textRow1, "Next Level" );
+				index = 0;
+				puts_lcd2(textRow0);
+				pos_lcd(1,0);
+				puts_lcd2(textRow1);
+				wait_avr( 20000 );
+				level++;
+				build_combination( combo, level );
+				for( int i = 0; i < level; i++ )
+				{
+					clr_lcd();
+					sprintf( textRow0, "c: %s , i: %d", keys[combo[i]], i);
+					puts_lcd2( textRow0 );
+					wait_avr( 10000 );
+				}
+				readInput = 1;
 			}
 		}
 
-		
-		
-		
-// 		for( int i = 0; i < level; i++ )
-// 		{
-// 			clr_lcd();
-// 			sprintf( textRow0, "c: %d , i: %d",  *(combo + i), i);
-// 			puts_lcd2( textRow0 );
-// 			wait_avr( 10000 );
-// 		}
-		
-// 		for( unsigned char i = 0; i < 4; i++ )
-// 		{
-// 			wait_avr(2500);
-// 			key = get_key();
-// 			if( key )
-// 			{
-// 				clr_lcd();
-// 				//if( key == combo[index] )
-// 				//{
-// 					sprintf( textRow0, "key = %d", key );
-// 					puts_lcd2( textRow0 );
-// 					wait_avr( 20000 );
-// 					//index++; 
-// 				//}
-// 				//else
-// 				//{
-// 					//sprintf( textRow0, "fail" );
-// 					//puts_lcd2( textRow0 );
-// 				//}
-// // 				clr_lcd();
-// // 				sprintf( textRow0, "in: %d, k: %d", index, key );
-// // 				puts_lcd2( textRow0 );
-// // 				userInput[index++] = key;
-// 			}
-// 		}
-		
-// 		clr_lcd();
-// 		buildUserInput( userInput, level );
-// 		sprintf( textRow0, "test" );
-// 		puts_lcd2( textRow0 );
-// 		while(1);
-		/*
-		for( int i = 0; i < level; i++ )
-		{
-			clr_lcd();
-			sprintf( textRow0, "u: %d , i: %d",  userInput[i], i);
-			puts_lcd2( textRow0 );
-			wait_avr( 10000 );
-		}
-		*/
-		// b_c() return the array
-		// Build an array of user input
-		// Check the user input array
-		// Success / Failure results
 	}
 }
