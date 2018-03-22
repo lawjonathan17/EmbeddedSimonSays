@@ -3,6 +3,19 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define A 0
+#define AS 1
+#define B 2
+#define C 3
+#define CS 4
+#define D 5
+#define DS 6
+#define EN 7
+#define F 8
+#define FS 9
+#define G 10
+#define GS 11
+
 #define W 1
 #define H 2
 #define Q 3
@@ -18,6 +31,8 @@ const float FRQ[16] = { 220.000, 233.082, 246.942, 261.626, 277.183, 293.665, 31
 
 const char* keys[16] = { "1", "2", "3", "A", "4", "5", "6", "B", "7", "8", "9","C", "Star", "0", "Pound", "D" };
 
+struct note winMusic[7] = { {EN, H}, {EN, H}, {EN, H}, {C,H}, {C, H}, {G,H}, {GS, W} };
+struct note loseMusic [12] = {{C, Q},{C, Q},{D, H},{B, H},{F, H},{F, H},{F, W},{E, W},{D, W},{C, H},{E, H},{E, H}};
 void ini_avr(void)
 {
 	WDTCR = 15;
@@ -139,6 +154,22 @@ void buildUserInput( int* userInput, int level )
 	}
 }
 
+void playWinMusic()
+{
+	for( unsigned char i = 0; i < 20; i++ )
+	{
+		play_note( winMusic[i].freq, winMusic[i].duration );
+	}
+}
+
+void playLoseMusic()
+{
+	for( unsigned char i = 0; i < 12; i++ )
+	{
+		play_note( loseMusic[i].freq, loseMusic[i].duration );
+	}
+}
+
 void playGame(int h){
 	char textRow0[17];
 	char textRow1[17];
@@ -186,10 +217,11 @@ void playGame(int h){
 						clr_lcd();
 						sprintf(textRow0, "Game Over");
 						sprintf(textRow1, "High Score: %d", highScore);
+						playLoseMusic();
 						puts_lcd2( textRow0 );
 						pos_lcd(1,0);
 						puts_lcd2(textRow1);
-						wait_avr(20000);
+						wait_avr(50000);
 						level = 3;
 						index = 0;
 						build_combination( combo, level );
@@ -212,6 +244,7 @@ void playGame(int h){
 				clr_lcd();
 				sprintf(textRow0, "Congrats!" );
 				sprintf(textRow1, "Next Level" );
+				playWinMusic();
 				index = 0;
 				puts_lcd2(textRow0);
 				pos_lcd(1,0);
