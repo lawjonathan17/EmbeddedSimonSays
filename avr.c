@@ -87,11 +87,8 @@ void play_note( unsigned char freq, unsigned char duration )
 	float period = ( 1.0 / ( FRQ[freq] ) );
 	float th,tl = ( period / 2 ) * 10000.0 ;
 	
-	// unsigned short limit = ( 1.0 / duration ) / period;
 	unsigned short limit = ( 1.0 / duration ) / period;
 	clr_lcd();
-	sprintf( testRow0, "%d", limit );
-	puts_lcd2( testRow0 );
 	for( unsigned short i = 0; i < limit; i++ )
 	{
 		SET_BIT( PORTB, 3 );
