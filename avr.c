@@ -189,7 +189,7 @@ void playGame(int h){
 							highScore = level;
 						}
 						clr_lcd();
-						sprintf(textRow0, "wrong game reset");
+						sprintf(textRow0, "Game Over");
 						sprintf(textRow1, "High Score: %d", highScore);
 						puts_lcd2( textRow0 );
 						pos_lcd(1,0);
