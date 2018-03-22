@@ -1,5 +1,8 @@
 #include "avr.h"
 #include "lcd.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define W 1
 #define H 2
@@ -86,7 +89,7 @@ void play_note( unsigned char freq, unsigned char duration )
 	float th,tl = ( period / 2 ) * 10000.0 ;
 	
 	// unsigned short limit = ( 1.0 / duration ) / period;
-	unsigned short limit = 1 / period;
+	unsigned short limit = ( 1.0 / duration ) / period;
 	clr_lcd();
 	sprintf( testRow0, "%d", limit );
 	puts_lcd2( testRow0 );
@@ -99,21 +102,32 @@ void play_note( unsigned char freq, unsigned char duration )
 	}
 }
 
-void show_combination( unsigned short size )
+void build_combination( int* combo, unsigned short level )
 {
-	char* combination( size );
-	
+	char textRow0[17];
+	for( unsigned short i = 0; i < level; i++ )
+	{
+		unsigned short keysIndex = ( rand() % 16 );
+		combo[i] = keysIndex;
+//		sprintf( textRow0, "%s", keys[keysIndex] );
+//		puts_lcd2( textRow0 );
+//		wait_avr( 10000 );
+//		clr_lcd();
+	}
 }
 
 int main(void)
 {
 	ini_lcd();
 	
+	/* Output mode for port B */
+	SET_BIT(DDRB, 3);
+	
 	char textRow0[17];
 	char textRow1[17];
 	
 // 	/* Welcome screen */
-// 	clr_lcd();
+ 	clr_lcd();
 // 	sprintf( textRow0, "Welcome to" );
 // 	sprintf( textRow1, "Jonmond Says" );
 // 	puts_lcd2( textRow0 );
@@ -130,11 +144,46 @@ int main(void)
 // 	puts_lcd2( textRow1 );
 // 	wait_avr( 4000 );
 // 	clr_lcd();
+
+	srand(time(NULL));
+// 	int a = ( rand() % 200 ) + 1;
+// 	clr_lcd();
+// 	sprintf( textRow0, "%d", a );
+// 	puts_lcd2( textRow0 );
+// 	a = 0;
+ 	int level = 3;
+	unsigned char key;
 	
 	
 	while( 1 )
 	{
-		play_note( 0, 5 );
+		int userInput[level];
+		int* combo;
+		build_combination( combo, level );
+		
+		for( int i = 0; i < level; i++ )
+		{
+			clr_lcd();
+			sprintf( textRow0, "c: %d , i: %d",  *(combo + i), i);
+			puts_lcd2( textRow0 );
+			wait_avr( 10000 );
+		}
+		int inputIndex = 0;
+		for( unsigned char i = 0; i < 4; i++ )
+		{
+			wait_avr(300);
+			key = get_key();
+			if( key )
+			{
+				userInput[inputIndex++] = key;
+			}
+		}
+		
+		// b_c() return the array
+		// Build an array of user input
+		// Check the user input array
+		// Success / Failure results
+
 	}
 	
 }
