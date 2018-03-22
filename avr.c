@@ -180,6 +180,7 @@ void playGame(int h){
  	build_combination( combo, level );
  	unsigned char readInput = 1;
 	int highScore = h;
+	int correctKeys = 0;
 	for( int i = 0; i < level; i++ )
 	{
 		clr_lcd();
@@ -208,11 +209,12 @@ void playGame(int h){
 					if( (key-1) == combo[index] )
 					{
 						index++;
+						correctKeys++;
 					}
 					else
 					{
-						if (level > highScore){
-							highScore = level;
+						if (correctKeys > highScore){
+							highScore = correctKeys;
 						}
 						clr_lcd();
 						sprintf(textRow0, "Game Over");
