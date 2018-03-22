@@ -142,15 +142,110 @@ void buildUserInput( int* userInput, int level )
 	}
 }
 
+void playGame(int h){
+	char textRow0[17];
+	char textRow1[17];
+ 	int level = 3;
+ 	unsigned char key;
+ 	unsigned short index = 0;
+ 	int combo[9999];
+ 	build_combination( combo, level );
+ 	unsigned char readInput = 1;
+	int highScore = h;
+	for( int i = 0; i < level; i++ )
+	{
+		clr_lcd();
+		sprintf( textRow0, "c: %s", keys[combo[i]]);
+		puts_lcd2( textRow0 );
+		wait_avr( 10000 );
+	}
+	clr_lcd();
+	while( 1 )
+	{
+		if( readInput )
+		{
+			for( unsigned char i = 0; i < 4; i++ )
+			{
+				wait_avr(2500);
+				key = get_key();
+				
+				if(key)
+				{
+					clr_lcd();
+					// sprintf( textRow0, "k = %d, c: %d", key-1, *(combo + index) );
+					sprintf( textRow0, "k = %s", keys[key-1]);
+					sprintf( textRow1, "c = %s", keys[combo[index]] );
+					puts_lcd2( textRow0 );
+					pos_lcd(1, 0);
+					puts_lcd2(textRow1);
+					
+					if( (key-1) == combo[index] )
+					{
+						index++;
+					}
+					else
+					{
+						if (level > highScore){
+							highScore = level;
+						}
+						clr_lcd();
+						sprintf(textRow0, "wrong game reset");
+						sprintf(textRow1, "High Score: %d", highScore);
+						puts_lcd2( textRow0 );
+						pos_lcd(1,0);
+						puts_lcd2(textRow1);
+						wait_avr(20000);
+						level = 3;
+						index = 0;
+						//playGame(highScore);
+						build_combination( combo, level );
+						for( int i = 0; i < level; i++ )
+						{
+							clr_lcd();
+							sprintf( textRow0, "c: %s", keys[combo[i]]);
+							puts_lcd2( textRow0 );
+							wait_avr( 10000 );
+						}
+						clr_lcd();
+						continue;
+					}
+				}
+			}
+			
+			if( index == level )
+			{
+				clr_lcd();
+				sprintf(textRow0, "Congrats!" );
+				sprintf(textRow1, "Next Level" );
+				index = 0;
+				puts_lcd2(textRow0);
+				pos_lcd(1,0);
+				puts_lcd2(textRow1);
+				wait_avr( 20000 );
+				level++;
+				build_combination( combo, level );
+				for( int i = 0; i < level; i++ )
+				{
+					clr_lcd();
+					sprintf( textRow0, "c: %s", keys[combo[i]]);
+					puts_lcd2( textRow0 );
+					wait_avr( 10000 );
+				}
+				readInput = 1;
+			}
+		}
+
+	}
+}
+
 int main(void)
 {
 	ini_lcd();
 	
 	/* Output mode for port B */
 	SET_BIT(DDRB, 3);
-	
-	char textRow0[17];
-	char textRow1[17];
+	int hScore = 0;
+
 	
 // 	/* Welcome screen */
  	clr_lcd();
@@ -177,79 +272,7 @@ int main(void)
 // 	sprintf( textRow0, "%d", a );
 // 	puts_lcd2( textRow0 );
 // 	a = 0;
-
-
- 	int level = 3;
-	unsigned char key;
-	unsigned short index = 0;
-	int combo[9999];
-	build_combination( combo, level );
-	unsigned char readInput = 1;
+	playGame(hScore);
 	
-	for( int i = 0; i < level; i++ )
-	{
-		clr_lcd();
-		sprintf( textRow0, "c: %s , i: %d", keys[combo[i]], i);
-		puts_lcd2( textRow0 );
-		wait_avr( 10000 );
-	}
-	clr_lcd();
-	
-	while( 1 )
-	{
-		if( readInput )
-		{
-			for( unsigned char i = 0; i < 4; i++ )
-			{
-				wait_avr(2500);
-				key = get_key();
-				
-				if(key)
-				{
-					clr_lcd();
-					// sprintf( textRow0, "k = %d, c: %d", key-1, *(combo + index) );
-					sprintf( textRow0, "k = %d", key-1);
-					sprintf( textRow1, "c = %s", keys[combo[index]] );
-					puts_lcd2( textRow0 );
-					pos_lcd(1, 0);
-					puts_lcd2(textRow1);
-					
-					if( (key-1) == combo[index] )
-					{
-						index++;
-					}
-					else
-					{
-						clr_lcd();
-						sprintf(textRow0, "wrong");
-						puts_lcd2( textRow0 );
-						readInput = 0;
-					}
-				}
-			}
-			
-			if( index == level )
-			{
-				clr_lcd();
-				sprintf(textRow0, "Congrats!" );
-				sprintf(textRow1, "Next Level" );
-				index = 0;
-				puts_lcd2(textRow0);
-				pos_lcd(1,0);
-				puts_lcd2(textRow1);
-				wait_avr( 20000 );
-				level++;
-				build_combination( combo, level );
-				for( int i = 0; i < level; i++ )
-				{
-					clr_lcd();
-					sprintf( textRow0, "c: %s , i: %d", keys[combo[i]], i);
-					puts_lcd2( textRow0 );
-					wait_avr( 10000 );
-				}
-				readInput = 1;
-			}
-		}
 
-	}
 }
