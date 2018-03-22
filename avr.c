@@ -1,10 +1,20 @@
 #include "avr.h"
 #include "lcd.h"
 
+#define W 1
+#define H 2
+#define Q 3
+#define E 4
+
 struct note{
 	unsigned char freq;
 	unsigned char duration;
 };
+
+const float FRQ[16] = { 220.000, 233.082, 246.942, 261.626, 277.183, 293.665, 311.127, 329.628,
+						349.228, 369.994, 391.995, 415.305, 440.000, 466.164, 493.883, 523.251 };
+
+const char* keys[16] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "Star", "Pound" };
 
 void ini_avr(void)
 {
@@ -13,9 +23,9 @@ void ini_avr(void)
 
 void wait_avr(unsigned short msec)
 {
-	TCCR0 = 3; 
+	TCCR0 = 2; 
 	while (msec--) {
-		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 64) * 0.001);
+		TCNT0 = (unsigned char)(256 - (XTAL_FRQ / 8) * 0.0001);
 		SET_BIT(TIFR, TOV0);
 		WDR();
 		while (!GET_BIT(TIFR, TOV0));
@@ -68,21 +78,18 @@ int get_key()
 	return 0;
 }
 
-void play_note( unsigned char freq, unsigned char duration, unsigned char ratio )
+void play_note( unsigned char freq, unsigned char duration )
 {
-	float period = ( 1.0 / ( FRQ[freq] ) );
-	float th = ( period / ratio )* 10000.0 ;
-	float tl;
-	if ( ratio == 3 )
-	{
-		tl = ( (ratio-1) / ratio ) * period * 10000.0;
-	}
-	else if ( ratio == 2 )
-	{
-		tl = ( period / ratio )* 10000.0 ;
-	}
+	char testRow0[17];
 	
-	unsigned short limit = ( 1.0 / duration ) / period;
+	float period = ( 1.0 / ( FRQ[freq] ) );
+	float th,tl = ( period / 2 ) * 10000.0 ;
+	
+	// unsigned short limit = ( 1.0 / duration ) / period;
+	unsigned short limit = 1 / period;
+	clr_lcd();
+	sprintf( testRow0, "%d", limit );
+	puts_lcd2( testRow0 );
 	for( unsigned short i = 0; i < limit; i++ )
 	{
 		SET_BIT( PORTB, 3 );
@@ -92,6 +99,12 @@ void play_note( unsigned char freq, unsigned char duration, unsigned char ratio 
 	}
 }
 
+void show_combination( unsigned short size )
+{
+	char* combination( size );
+	
+}
+
 int main(void)
 {
 	ini_lcd();
@@ -99,11 +112,29 @@ int main(void)
 	char textRow0[17];
 	char textRow1[17];
 	
-	clr_lcd();
-	sprintf( textRow0, "Welcome to" );
-	sprintf( textRow1, "Jimond Says" );
-	puts_lcd2( textRow0 );
-	pos_lcd( 1, 0 );
-	puts_lcd2( textRow1 );
+// 	/* Welcome screen */
+// 	clr_lcd();
+// 	sprintf( textRow0, "Welcome to" );
+// 	sprintf( textRow1, "Jonmond Says" );
+// 	puts_lcd2( textRow0 );
+// 	pos_lcd( 1, 0 );
+// 	puts_lcd2( textRow1 );
+// 	
+// 	/* Instructions */
+//  	wait_avr( 3000 );
+//  	clr_lcd();
+//  	sprintf( textRow0, "Test your memory" );
+// 	sprintf( textRow1, "Match the keys" );
+//  	puts_lcd2( textRow0 );
+// 	pos_lcd( 1, 0 );
+// 	puts_lcd2( textRow1 );
+// 	wait_avr( 4000 );
+// 	clr_lcd();
+	
+	
+	while( 1 )
+	{
+		play_note( 0, 5 );
+	}
 	
 }
