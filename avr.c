@@ -155,7 +155,8 @@ void playGame(int h){
 	for( int i = 0; i < level; i++ )
 	{
 		clr_lcd();
-		sprintf( textRow0, "c: %s", keys[combo[i]]);
+		sprintf( textRow0, "%s", keys[combo[i]]);
+		play_note(combo[i], 1);
 		puts_lcd2( textRow0 );
 		wait_avr( 10000 );
 	}
@@ -172,12 +173,9 @@ void playGame(int h){
 				if(key)
 				{
 					clr_lcd();
-					// sprintf( textRow0, "k = %d, c: %d", key-1, *(combo + index) );
-					sprintf( textRow0, "k = %s", keys[key-1]);
-					sprintf( textRow1, "c = %s", keys[combo[index]] );
+					sprintf( textRow0, "%s", keys[combo[index]] );
+					play_note(combo[index], 1);
 					puts_lcd2( textRow0 );
-					pos_lcd(1, 0);
-					puts_lcd2(textRow1);
 					
 					if( (key-1) == combo[index] )
 					{
@@ -197,12 +195,12 @@ void playGame(int h){
 						wait_avr(20000);
 						level = 3;
 						index = 0;
-						//playGame(highScore);
 						build_combination( combo, level );
 						for( int i = 0; i < level; i++ )
 						{
 							clr_lcd();
-							sprintf( textRow0, "c: %s", keys[combo[i]]);
+							sprintf( textRow0, "%s", keys[combo[i]]);
+							play_note(combo[i], 1);
 							puts_lcd2( textRow0 );
 							wait_avr( 10000 );
 						}
@@ -227,7 +225,8 @@ void playGame(int h){
 				for( int i = 0; i < level; i++ )
 				{
 					clr_lcd();
-					sprintf( textRow0, "c: %s", keys[combo[i]]);
+					sprintf( textRow0, "%s", keys[combo[i]]);
+					play_note(combo[i], 1);
 					puts_lcd2( textRow0 );
 					wait_avr( 10000 );
 				}
