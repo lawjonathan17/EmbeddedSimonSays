@@ -226,6 +226,7 @@ void playGame(int h){
 						wait_avr(50000);
 						level = 3;
 						index = 0;
+						correctKeys = 0;
 						build_combination( combo, level );
 						for( int i = 0; i < level; i++ )
 						{
