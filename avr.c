@@ -253,6 +253,10 @@ void playGame(int h){
 				pos_lcd(1,0);
 				puts_lcd2(textRow1);
 				wait_avr( 20000 );
+				clr_lcd();
+				sprintf(textRow0, "Current Score:%d", correctKeys);
+				puts_lcd2(textRow0);
+				wait_avr( 20000 );
 				level++;
 				build_combination( combo, level );
 				for( int i = 0; i < level; i++ )
